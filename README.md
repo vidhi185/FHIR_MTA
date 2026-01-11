@@ -26,13 +26,14 @@ The project is structured to reflect real-world healthcare IT architecture, focu
 ## Architect’s Narrative
 
 ### The Container Advantage
-Docker is used to deploy the HAPI FHIR server in a consistent and reproducible environment. This eliminates dependency conflicts and allows rapid setup of a validated FHIR data store.
+Docker was used to deploy the HAPI FHIR server in a containerized environment, mitigating dependency hell caused by differences in underlying system configurations ("metal"). This ensured a consistent and reproducible runtime across student machines. Port mapping bridged the container port to the host machine, enabling local access to the FHIR warehouse.
 
 ### Semantic Integrity
-FHIR profiles created using FHIR Shorthand act as a rulebook to enforce mandatory clinical fields. This prevents incomplete or unsafe data from entering the system and replaces ambiguous legacy representations.
+Legacy systems frequently store ambiguous "magic strings" such as M/F for gender. To preserve semantic correctness, a ConceptMap was authored to translate legacy codes into FHIR-compliant values using the $translate operation. This guarantees standardized, interoperable representations inside the warehouse.
 
 ### Transactional Atomicity
-Legacy data translation is designed with the concept of atomic operations in mind. By grouping related resources into transactions (conceptually), the system avoids orphaned or inconsistent healthcare data.
+During migration, Patient and Observation resources must be created together to prevent orphaned clinical data. This architecture leverages FHIR Transaction Bundles and UUID-based reference resolution, allowing multiple interdependent resources to be committed atomically in a single operation.
+
 
 ---
 
