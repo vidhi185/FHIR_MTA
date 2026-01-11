@@ -1,3 +1,9 @@
+"""
+This script demonstrates the logical translation of legacy CSV data into FHIR resources.
+In a production-grade migration, Patient and Observation resources would be grouped
+inside a FHIR Transaction Bundle using UUID-based references to ensure atomic execution
+and avoid orphaned clinical data.
+"""
 import csv
 import uuid
 
